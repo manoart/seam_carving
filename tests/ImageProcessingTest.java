@@ -16,12 +16,12 @@ public class ImageProcessingTest {
 
   public static void main(String[] argv) throws IOException {
     File imageSource;
-	if (argv.length > 0) {
+    if (argv.length > 0) {
       imageSource = new File(argv[0]);
     } else {
       imageSource = new File("../images/test.jpg");
     }
-	BufferedImage bufferedImage = ImageIO.read(imageSource);
+    BufferedImage bufferedImage = ImageIO.read(imageSource);
 
     ImageProcessor imageProcessor = new ImageProcessor(bufferedImage);
 
@@ -29,7 +29,10 @@ public class ImageProcessingTest {
 
     for (int i = 0; i < imageValues.length; i++) {
       for (int j = 0; j < imageValues[0].length; j++) {
-        System.out.println(imageValues[i][j]);
+        int red = (imageValues[i][j] >> 16) & 0xFF;
+        int green = (imageValues[i][j] >> 8) & 0xFF;
+        int blue = (imageValues[i][j]) & 0xFF;
+        System.out.println(red + ", " + green + ", " + blue);
       }
     }
   }

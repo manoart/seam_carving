@@ -27,7 +27,7 @@ public class ImageProcessor {
    */
   public ImageProcessor(BufferedImage image) {
     this.setImage(image);
-    this.imageValues = new int[image.getHeight()][image.getWidth()];
+    this.imageValues = new int[this.image.getHeight()][this.image.getWidth()];
   }
 
   public void setImage(BufferedImage image) {
@@ -35,6 +35,12 @@ public class ImageProcessor {
   }
 
   public int[][] getImageArray() {
+    for (int y = 0; y < this.imageValues.length; y++) {
+      for (int x = 0; x < this.imageValues[0].length; x++) {
+        this.imageValues[y][x] = this.image.getRGB(x, y);
+      }
+    }
+
     return this.imageValues;
   }
 }

@@ -40,6 +40,15 @@ public class ImageProcessor {
   }
 
   /**
+   * Getter for the image (RGB) values.
+   *
+   * @return 3D array with RGB and Alpha values for every pixel of the image.
+   */
+  public int[][][] getImageValues() {
+    return this.getRGBValues();
+  }
+
+  /**
    * This method takes an image and converts it into an 3 dimensional int array in
    * which the RGB value of every pixel is stored.
    * First dimension: rows.
@@ -51,16 +60,41 @@ public class ImageProcessor {
   public int[][][] getImageArray() {
     for (int y = 0; y < this.imageValues.length; y++) {
       for (int x = 0; x < this.imageValues[0].length; x++) {
-        // TODO change getRGB() to something faster!
         int rgb = this.image.getRGB(x, y);
-        for (int color = 0; color < 3; color++) {
-          this.imageValues[y][x][0] = (rgb >> 16) & 0xFF;
-          this.imageValues[y][x][1] = (rgb >>  8) & 0xFF;
-          this.imageValues[y][x][2] = (rgb      ) & 0xFF;
-        }
+        this.imageValues[y][x][0] = (rgb >> 16) & 0xFF;
+        this.imageValues[y][x][1] = (rgb >>  8) & 0xFF;
+        this.imageValues[y][x][2] = (rgb      ) & 0xFF;
       }
     }
+    return this.imageValues;
+  }
 
+
+  private int[][][] getRGBValues() {
+
+    byte[] pixels = ((DataBufferByte) this.image.getRaster().getDataBuffer()).getData();
+    int width = this.image.getWidth();
+    int height = this.image.getHeight();
+    boolean hasAlphaChannel = this.image.getAlphaRaster() != null;
+    int pixelLength;
+
+    if (hasAlphaChannel) {
+      pixelLength = 4;
+    } else {
+      pixelLength = 3;
+    }
+    this.imageValues = new int[height][width][3];
+    for (int pixel = 0, row = 0, col = 0; pixel < pixels.length; pixel += pixelLength) {
+      //result[row][col][3] = (((int) pixels[pixel]     & 0xff) << 24); // alpha
+      this.imageValues[row][col][2] = ( (int) pixels[pixel + 0]      ) & 0xFF;        // blue
+      this.imageValues[row][col][1] = (((int) pixels[pixel + 1] >>  8) & 0xFF); // green
+      this.imageValues[row][col][0] = (((int) pixels[pixel + 2] >> 16) & 0xFF); // red
+      col++;
+      if (col == width) {
+        col = 0;
+        row++;
+      }
+    }
     return this.imageValues;
   }
 }

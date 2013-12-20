@@ -25,7 +25,7 @@ public class ImageProcessingTest {
 
     ImageProcessor imageProcessor = new ImageProcessor(bufferedImage);
 
-    int[][][] imageValues = imageProcessor.getImageArray();
+    int[][][] imageValues = imageProcessor.getImageValues();
 
     for (int i = 0; i < imageValues.length; i++) {
       for (int j = 0; j < imageValues[0].length; j++) {

@@ -25,13 +25,13 @@ public class ImageProcessingTest {
 
     ImageProcessor imageProcessor = new ImageProcessor(bufferedImage);
 
-    int[][] imageValues = imageProcessor.getImageArray();
+    int[][][] imageValues = imageProcessor.getImageArray();
 
     for (int i = 0; i < imageValues.length; i++) {
       for (int j = 0; j < imageValues[0].length; j++) {
-        int red = (imageValues[i][j] >> 16) & 0xFF;
-        int green = (imageValues[i][j] >> 8) & 0xFF;
-        int blue = (imageValues[i][j]) & 0xFF;
+        int red = imageValues[i][j][0];
+        int green = imageValues[i][j][1];
+        int blue = imageValues[i][j][2];
         System.out.println(red + ", " + green + ", " + blue);
       }
     }

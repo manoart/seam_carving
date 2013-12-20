@@ -2,8 +2,6 @@ package image_processing;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 public class ImageProcessor {
 
@@ -11,13 +9,13 @@ public class ImageProcessor {
   private BufferedImage image;
 
   /** 2D array with RGB values of the given image. */
-  private int[][][] imageValues;
+  private int[][][] imageRGBValues;
 
   /**
    * Default constructor;
    */
   public ImageProcessor() {
-    this.image = null;
+    this(null);
   }
 
   /**
@@ -27,7 +25,7 @@ public class ImageProcessor {
    */
   public ImageProcessor(BufferedImage image) {
     this.setImage(image);
-    this.imageValues = new int[this.image.getHeight()][this.image.getWidth()][3];
+    this.imageRGBValues = new int[this.image.getHeight()][this.image.getWidth()][3];
   }
 
   /**
@@ -45,7 +43,7 @@ public class ImageProcessor {
    * @return 3D array with RGB and Alpha values for every pixel of the image.
    */
   public int[][][] getImageValues() {
-    return this.getRGBValues();
+    return this.getImageArray();
   }
 
   /**
@@ -58,18 +56,27 @@ public class ImageProcessor {
    * @return An 3 dimensional int array with RGB values for every pixel of the image.
    */
   public int[][][] getImageArray() {
-    for (int y = 0; y < this.imageValues.length; y++) {
-      for (int x = 0; x < this.imageValues[0].length; x++) {
+    for (int y = 0; y < this.imageRGBValues.length; y++) {
+      for (int x = 0; x < this.imageRGBValues[0].length; x++) {
         int rgb = this.image.getRGB(x, y);
-        this.imageValues[y][x][0] = (rgb >> 16) & 0xFF;
-        this.imageValues[y][x][1] = (rgb >>  8) & 0xFF;
-        this.imageValues[y][x][2] = (rgb      ) & 0xFF;
+        this.imageRGBValues[y][x][0] = (rgb >> 16) & 0xFF;
+        this.imageRGBValues[y][x][1] = (rgb >>  8) & 0xFF;
+        this.imageRGBValues[y][x][2] = (rgb      ) & 0xFF;
       }
     }
-    return this.imageValues;
+    return this.imageRGBValues;
   }
 
 
+  /**
+   * It does the same as the getImageArray() method but not as fast
+   * (where it should be faster).
+   * First dimension: rows.
+   * Second dimension: columns.
+   * Third dimension: RGB values.
+   *
+   * @return An 3 dimensional int array with RGB values for every pixel of the image.
+   */
   private int[][][] getRGBValues() {
 
     byte[] pixels = ((DataBufferByte) this.image.getRaster().getDataBuffer()).getData();
@@ -83,18 +90,18 @@ public class ImageProcessor {
     } else {
       pixelLength = 3;
     }
-    this.imageValues = new int[height][width][3];
+    this.imageRGBValues = new int[height][width][3];
     for (int pixel = 0, row = 0, col = 0; pixel < pixels.length; pixel += pixelLength) {
       //result[row][col][3] = (((int) pixels[pixel]     & 0xff) << 24); // alpha
-      this.imageValues[row][col][2] = ( (int) pixels[pixel + 0]      ) & 0xFF;        // blue
-      this.imageValues[row][col][1] = (((int) pixels[pixel + 1] >>  8) & 0xFF); // green
-      this.imageValues[row][col][0] = (((int) pixels[pixel + 2] >> 16) & 0xFF); // red
+      this.imageRGBValues[row][col][2] = ( (int) pixels[pixel + 0]      ) & 0xFF;        // blue
+      this.imageRGBValues[row][col][1] = (((int) pixels[pixel + 1] >>  8) & 0xFF); // green
+      this.imageRGBValues[row][col][0] = (((int) pixels[pixel + 2] >> 16) & 0xFF); // red
       col++;
       if (col == width) {
         col = 0;
         row++;
       }
     }
-    return this.imageValues;
+    return this.imageRGBValues;
   }
 }

@@ -9,28 +9,46 @@ public class Energizer {
   /** Array with the RGB values for each pixel. */
   private int[][][] imageRGBValues;
 
+
   /**
    * Default constructor.
    */
   public Energizer() {
-    this();
+    this(null);
   }
+
 
   /**
    * Custom constructor.
    *
-   * @param imageRGBValues 
+   * @param imageRGBValues 3D Array with the RGB values of the image.
+   */
   public Energizer(int[][][] imageRGBValues) {
     this.imageRGBValues = imageRGBValues;
   }
 
+
+  /**
+   * Getter for the brightness array. This array is used to calculate the
+   * energy of every given pixel of an image.
+   *
+   * @return 2D array with the brightness values of every pixel.
+   */
   public int[][] getBrightness() {
     return this.calculateBrightness();
   }
 
+
+  /**
+   * Getter for the energy array. This array is later used to calculate the
+   * seams which should be carved out.
+   *
+   * @return 2D array with the energy values of every pixel.
+   */
   public int[][] getEnergy() {
     return this.calculateEnergy();
   }
+
 
   /**
    * Calculates the brightness of each pixel (sum of the RGB values)
@@ -39,6 +57,15 @@ public class Energizer {
    * @return 2D array of the image with brightness values for each pixel.
    */
   private int[][] calculateBrightness() {
+    for (int i = 0; i < this.imageRGBValues.length; i++) {
+      for (int j = 0; j < this.imageRGBValues[0].length; j++) {
+        int brightness = 0;
+        for (int color = 0; color < 3; color++) {
+          brightness += this.imageRGBValues[color];
+        }
+        this.brightness[i][j] = brightness;
+      }
+    }
     return this.brightness;
   }
 

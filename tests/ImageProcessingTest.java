@@ -1,11 +1,4 @@
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferByte;
-
-import java.io.IOException;
-import java.io.File;
-
-import javax.imageio.ImageIO;
-
+import image_processing.ImageReader;
 import image_processing.ImageProcessor;
 
 /**
@@ -14,16 +7,14 @@ import image_processing.ImageProcessor;
  */
 public class ImageProcessingTest {
 
-  public static void main(String[] argv) throws IOException {
-    File imageSource;
+  public static void main(String[] argv) {
+    ImageReader imageReader;
     if (argv.length > 0) {
-      imageSource = new File(argv[0]);
+      imageReader = new ImageReader(argv[0]);
     } else {
-      imageSource = new File("../images/test.jpg");
+      imageReader = new ImageReader("../images/test.jpg");
     }
-    BufferedImage bufferedImage = ImageIO.read(imageSource);
-
-    ImageProcessor imageProcessor = new ImageProcessor(bufferedImage);
+    ImageProcessor imageProcessor = new ImageProcessor(imageReader.getBufferedImage());
 
     long startTime = System.nanoTime();
     int[][][] imageValues = imageProcessor.getImageValues();
@@ -31,6 +22,7 @@ public class ImageProcessingTest {
 
     long time = endTime - startTime;
     System.out.println("Time: " + time);
+
 //    for (int i = 0; i < imageValues.length; i++) {
 //      for (int j = 0; j < imageValues[0].length; j++) {
 //        int red = imageValues[i][j][0];

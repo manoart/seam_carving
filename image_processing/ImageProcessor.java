@@ -59,9 +59,9 @@ public class ImageProcessor {
     for (int y = 0; y < this.imageRGBValues.length; y++) {
       for (int x = 0; x < this.imageRGBValues[0].length; x++) {
         int rgb = this.image.getRGB(x, y);
-        this.imageRGBValues[y][x][0] = (rgb >> 16) & 0xFF;
-        this.imageRGBValues[y][x][1] = (rgb >>  8) & 0xFF;
-        this.imageRGBValues[y][x][2] = (rgb      ) & 0xFF;
+        this.imageRGBValues[y][x][0] = (rgb >> 16) & 0xFF;  // red
+        this.imageRGBValues[y][x][1] = (rgb >>  8) & 0xFF;  // green
+        this.imageRGBValues[y][x][2] = (rgb      ) & 0xFF;  // blue
       }
     }
     return this.imageRGBValues;

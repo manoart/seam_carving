@@ -12,6 +12,8 @@ public class EnergyFunctionTest {
     } else {
       imageReader = new ImageReader("../images/test.jpg");
     }
+
+    long startTime = System.nanoTime();
     ImageProcessor imageProcessor = new ImageProcessor(imageReader.getBufferedImage());
 
     int[][][] imageValues = imageProcessor.getImageValues();
@@ -20,10 +22,16 @@ public class EnergyFunctionTest {
 
     int[][] brightness = energizer.getBrightness();
 
-    for (int i = 0; i < brightness.length; i++) {
-      for (int j = 0; j < brightness[0].length; j++) {
-        System.out.println(brightness[i][j]);
-      }
-    }
+//    for (int i = 0; i < brightness.length; i++) {
+//      for (int j = 0; j < brightness[0].length; j++) {
+//        System.out.println(brightness[i][j]);
+//      }
+//    }
+
+    ImageWriter imageWriter = new ImageWriter(brightness);
+    imageWriter.writeBrightnessImage();
+    long endTime = System.nanoTime();
+
+    System.out.println("Done. Time: " + (endTime - startTime));
   }
 }

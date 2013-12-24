@@ -1,3 +1,5 @@
+package energy_function;
+
 public class Energizer {
 
   /** Array with the brightness values for each pixel. */
@@ -25,6 +27,8 @@ public class Energizer {
    */
   public Energizer(int[][][] imageRGBValues) {
     this.imageRGBValues = imageRGBValues;
+    this.brightness = new int[this.imageRGBValues.length][this.imageRGBValues[0].length];
+    this.energy = new int[this.imageRGBValues.length][this.imageRGBValues[0].length];
   }
 
 
@@ -61,7 +65,7 @@ public class Energizer {
       for (int j = 0; j < this.imageRGBValues[0].length; j++) {
         int brightness = 0;
         for (int color = 0; color < 3; color++) {
-          brightness += this.imageRGBValues[color];
+          brightness += this.imageRGBValues[i][j][color];
         }
         this.brightness[i][j] = brightness;
       }

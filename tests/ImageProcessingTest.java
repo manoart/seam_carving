@@ -20,17 +20,17 @@ public class ImageProcessingTest {
     int[][][] imageValues = imageProcessor.getImageValues();
     long endTime = System.nanoTime();
 
-    long time = endTime - startTime;
-    System.out.println("Time: " + time);
+//    long time = endTime - startTime;
+//    System.out.println("Time: " + time);
 
-//    for (int i = 0; i < imageValues.length; i++) {
-//      for (int j = 0; j < imageValues[0].length; j++) {
-//        int red = imageValues[i][j][0];
-//        int green = imageValues[i][j][1];
-//        int blue = imageValues[i][j][2];
-//        System.out.println(red + ", " + green + ", " + blue);
-//      }
-//    }
+    for (int i = 0; i < imageValues.length; i++) {
+      for (int j = 0; j < imageValues[0].length; j++) {
+        int red = imageValues[i][j][0];
+        int green = imageValues[i][j][1];
+        int blue = imageValues[i][j][2];
+        System.out.println(red + ", " + green + ", " + blue);
+      }
+    }
 
   }
 }

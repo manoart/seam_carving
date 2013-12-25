@@ -7,12 +7,20 @@ import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Class to write images and save them persistantly.
+ * Preferably used to write the image after the seam carving
+ * and the tests going along with it.
+ */
 public class ImageWriter {
 
+  /** The BufferedImage that is to be written into a file. */
   private BufferedImage bufferedImage;
 
+  /** The source for the BufferedImage (brightness or energy). */
   private int[][] imageSource;
 
+  /** The file that is to be written. */
   private File image;
 
   public ImageWriter() {
@@ -34,21 +42,31 @@ public class ImageWriter {
   }
 
   public void writeBrightnessImage() {
-    for (int i = 0; i < this.imageSource.length; i ++) {
-      for (int j = 0; j < this.imageSource[0].length; j++) {
-        int monochrome = this.imageSource[i][j] / 3;
+    this.writeMonochromeImage("brightness.png", 3);
+  }
+
+  public void writeEnergyImage() {
+    this.writeMonochromeImage("energy.png", 3);
+  }
+
+  private void writeMonochromeImage(String fileName, int divisor) {
+    int height = this.imageSource.length;
+    int width = this.imageSource[0].length;
+    for (int i = 0; i < height; i ++) {
+      for (int j = 0; j < width; j++) {
+        int monochrome = this.imageSource[i][j] / divisor;
         int rgb = monochrome << 16;
         rgb += monochrome << 8;
         rgb += monochrome;
         this.bufferedImage.setRGB(j, i, rgb);
       }
     }
-    this.writeImage();
+    this.writeImage(fileName);
   }
 
-  private void writeImage() {
+  private void writeImage(String fileName) {
     try {
-      this.image = new File("brightness.png");
+      this.image = new File(fileName);
       ImageIO.write(this.bufferedImage, "png", image);
     } catch (IOException e) {
       System.err.println(e.getMessage());

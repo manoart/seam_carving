@@ -22,14 +22,29 @@ public class EnergyFunctionTest {
 
     int[][] brightness = energizer.getBrightness();
 
+    int[][] energy = energizer.getEnergy();
+
+//    System.out.println("Brightness:");
 //    for (int i = 0; i < brightness.length; i++) {
 //      for (int j = 0; j < brightness[0].length; j++) {
 //        System.out.println(brightness[i][j]);
 //      }
 //    }
 
-    ImageWriter imageWriter = new ImageWriter(brightness);
-    imageWriter.writeBrightnessImage();
+//    System.out.println();
+//    System.out.println("Energy:");
+//    for (int i = 0; i < energy.length; i++) {
+//      for (int j = 0; j < energy[0].length; j++) {
+//        System.out.println(energy[i][j]);
+//      }
+//    }
+
+//    ImageWriter imageBrightnessWriter = new ImageWriter(brightness);
+//    imageBrightnessWriter.writeBrightnessImage();
+
+    ImageWriter imageEnergyWriter = new ImageWriter(energy);
+    imageEnergyWriter.writeEnergyImage();
+
     long endTime = System.nanoTime();
 
     System.out.println("Done. Time: " + (endTime - startTime));

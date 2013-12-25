@@ -82,10 +82,10 @@ public class Energizer {
    *       G H I
    *
    * using the formula
-   *       energy(E) = sqrt(xenergy^2 + yenergy^2)
+   *       energy(E) = sqrt(xEnergy^2 + yEnergy^2)
    * where
-   *       xenergy = a + 2d + g - c - 2f - i
-   *       yenergy = a + 2b + c - g - 2h - i
+   *       xEnergy = a + 2d + g - c - 2f - i
+   *       yEnergy = a + 2b + c - g - 2h - i
    *
    * and each lowercase letter represents the brightness
    * (sum of the red, blue, and green values) of the corresponding pixel.
@@ -96,6 +96,35 @@ public class Energizer {
    * @return 2D array with the energy value vor each pixel.
    */
   private int[][] calculateEnergy() {
+    int height = this.brightness.length;
+    int width  = this.brightness[0].length;
+
+    // brightness array with a 1 pixel black border
+    int[][] tmp = new int[height + 2][width + 2];
+
+//    // filling tmp
+//    for (int i = 1; i < tmp.length - 1; i++) {
+//      for (int j = 1; j < tmp[0].length - 1; j++) {
+//        tmp[i][j] = this.brightness[i - 1][j - 1];
+//      }
+//    }
+
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        tmp[i + 1][j + 1] = this.brightness[i][j];
+      }
+    }
+
+    // filling this.energy
+    for (int i = 1; i < tmp.length - 1; i++) {
+      for (int j = 1; j < tmp[0].length - 1; j++) {
+        int xEnergy = tmp[i - 1][j - 1] + (2 * tmp[i][j - 1]) + tmp[i + 1][j - 1] - tmp[i - 1][j + 1] - (2 * tmp[i][j + 1]) - tmp[i + 1][j + 1];
+        int yEnergy = tmp[i - 1][j - 1] + (2 * tmp[i - 1][j]) + tmp[i - 1][j + 1] - tmp[i + 1][j - 1] - (2 * tmp[i + 1][j]) - tmp[i + 1][j + 1];
+
+        this.energy[i - 1][j - 1] = (int) Math.sqrt((xEnergy * xEnergy) + (yEnergy * yEnergy));
+      }
+    }
+
     return this.energy;
   }
 

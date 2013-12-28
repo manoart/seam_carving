@@ -22,6 +22,11 @@ public class SeamGenerator {
     this.energy = energy;
     this.seams = new ArrayList<Seam>(seamNumber);
     this.cumulatedEnergy = new int[this.energy.length][this.energy[0].length][2];
+    this.calculateCumulatedEnergy();
+  }
+
+  public int[][][] getCumulatedEnergy() {
+    return this.cumulatedEnergy;
   }
 
   public List<Seam> getSeams() {
@@ -34,7 +39,6 @@ public class SeamGenerator {
   }
 
   private void generateSeams() {
-    this.calculateCumulatedEnergy();
     this.addSeams();
   }
 
@@ -82,44 +86,48 @@ public class SeamGenerator {
       this.cumulatedEnergy[0][row][0] = this.energy[0][row];
     }
 
-    for (int i = 1; i < this.energy.length; i++) {
-      for (int j = 0; j < this.energy[0].length; j++) {
+    for (int i = 1; i < this.cumulatedEnergy.length; i++) {
+      for (int j = 0; j < this.cumulatedEnergy[0].length; j++) {
         int minEnergy = Integer.MAX_VALUE;
         int energy = this.energy[i][j];
         int direction = 0;
 
         // TODO refactor!
         if (j == 0) {
-          if ((energy + this.energy[i - 1][j]) < minEnergy) {
-            minEnergy = energy + this.energy[i - 1][j];
+          if ((energy + this.cumulatedEnergy[i - 1][j][0]) < minEnergy) {
+            minEnergy = energy + this.cumulatedEnergy[i - 1][j][0];
             direction = 0;
-          } else if ((energy + this.energy[i - 1][j + 1]) < minEnergy) {
-            minEnergy = energy + this.energy[i - 1][j + 1];
+          }
+          if ((energy + this.cumulatedEnergy[i - 1][j + 1][0]) < minEnergy) {
+            minEnergy = energy + this.cumulatedEnergy[i - 1][j + 1][0];
             direction = 1;
           }
           this.cumulatedEnergy[i][j][0] = minEnergy;
           this.cumulatedEnergy[i][j][1] = direction;
 
-        } else if (j == this.energy[0].length - 1) {
-          if ((energy + this.energy[i - 1][j - 1]) < minEnergy) {
-            minEnergy = energy + this.energy[i - 1][j - 1];
+        } else if (j == this.cumulatedEnergy[0].length - 1) {
+          if ((energy + this.cumulatedEnergy[i - 1][j - 1][0]) < minEnergy) {
+            minEnergy = energy + this.cumulatedEnergy[i - 1][j - 1][0];
             direction = -1;
-          } else if ((energy + this.energy[i - 1][j]) < minEnergy) {
-            minEnergy = energy + this.energy[i - 1][j];
+          }
+          if ((energy + this.cumulatedEnergy[i - 1][j][0]) < minEnergy) {
+            minEnergy = energy + this.cumulatedEnergy[i - 1][j][0];
             direction = 0;
           }
           this.cumulatedEnergy[i][j][0] = minEnergy;
           this.cumulatedEnergy[i][j][1] = direction;
 
         } else {
-          if ((energy + this.energy[i - 1][j - 1]) < minEnergy) {
-            minEnergy = energy + this.energy[i - 1][j - 1];
+          if ((energy + this.cumulatedEnergy[i - 1][j - 1][0]) < minEnergy) {
+            minEnergy = energy + this.cumulatedEnergy[i - 1][j - 1][0];
             direction = -1;
-          } else if ((energy + this.energy[i - 1][j]) < minEnergy) {
-            minEnergy = energy + this.energy[i - 1][j];
+          }
+          if ((energy + this.cumulatedEnergy[i - 1][j][0]) < minEnergy) {
+            minEnergy = energy + this.cumulatedEnergy[i - 1][j][0];
             direction = 0;
-          } else if ((energy + this.energy[i - 1][j + 1]) < minEnergy) {
-            minEnergy = energy + this.energy[i - 1][j + 1];
+          }
+          if ((energy + this.cumulatedEnergy[i - 1][j + 1][0]) < minEnergy) {
+            minEnergy = energy + this.cumulatedEnergy[i - 1][j + 1][0];
             direction = 1;
           }
           this.cumulatedEnergy[i][j][0] = minEnergy;

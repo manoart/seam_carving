@@ -27,6 +27,7 @@ public class SeamGeneratorTest {
     int[][] brightness = energizer.getBrightness();
 
     int[][] energy = energizer.getEnergy();
+//    int[][] energy = {{1,4,3,5,2}, {3,2,5,2,3}, {5,2,4,2,1}};
 
 //    System.out.println("Brightness:");
 //    for (int i = 0; i < brightness.length; i++) {
@@ -46,13 +47,24 @@ public class SeamGeneratorTest {
 //    ImageWriter imageBrightnessWriter = new ImageWriter(brightness);
 //    imageBrightnessWriter.writeBrightnessImage();
 
-    ImageWriter imageEnergyWriter = new ImageWriter(energy);
-    imageEnergyWriter.writeEnergyImage();
+//    ImageWriter imageEnergyWriter = new ImageWriter(energy);
+//    imageEnergyWriter.writeEnergyImage();
 
     SeamGenerator sg = new SeamGenerator(energy, 1);
 
+//    int[][][] cumulatedEnergy = sg.getCumulatedEnergy();
+
     ImageWriter imageSeamWriter = new ImageWriter(energy);
     imageSeamWriter.writeSeamImage(sg.getSeams());
+
+//    System.out.println();
+//    System.out.println("CumulatedEnergy:");
+//    for (int i = 0; i < cumulatedEnergy.length; i++) {
+//      for (int j = 0; j < cumulatedEnergy[0].length; j++) {
+//        System.out.print(cumulatedEnergy[i][j][0] + "  ");
+//      }
+//      System.out.println();
+//    }
 
     long endTime = System.nanoTime();
 

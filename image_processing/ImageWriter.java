@@ -5,7 +5,12 @@ import java.io.File;
 
 import java.awt.image.BufferedImage;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
+
+import seam_carving.Seam;
 
 /**
  * Class to write images and save them persistantly.
@@ -47,6 +52,30 @@ public class ImageWriter {
 
   public void writeEnergyImage() {
     this.writeMonochromeImage("energy.png", 3);
+  }
+
+  public void writeSeamImage(List<Seam> seams) {
+    int height = this.imageSource.length;
+    int width = this.imageSource[0].length;
+    for (int i = 0; i < height; i ++) {
+      for (int j = 0; j < width; j++) {
+        int monochrome = this.imageSource[i][j] / 3;
+        int rgb = monochrome << 16;
+        rgb += monochrome << 8;
+        rgb += monochrome;
+        this.bufferedImage.setRGB(j, i, rgb);
+      }
+    }
+    for (Seam seam: seams) {
+      int[] path = seam.getPath();
+      int color = seam.getColor();
+      int x = seam.getStartPoint();
+      for (int y = 0; y < path.length; y++) {
+        x += path[y];
+        this.bufferedImage.setRGB(x, y, color);
+      }
+    }
+    this.writeImage("seams.png");
   }
 
   private void writeMonochromeImage(String fileName, int divisor) {

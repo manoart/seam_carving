@@ -29,11 +29,14 @@ public class ImageWriter {
   private File image;
 
   public ImageWriter() {
-    this(null);
   }
 
   public ImageWriter(int[][] imageSource) {
     this.setImageSource(imageSource);
+  }
+
+  public ImageWriter(BufferedImage bufferedImage) {
+    this.bufferedImage = bufferedImage;
   }
 
   private void setImageSource(int[][] imageSource) {
@@ -54,6 +57,20 @@ public class ImageWriter {
     this.writeMonochromeImage("energy.png", 3);
   }
 
+  public void writeBufferedImage() {
+    this.writeImage("bufferedImage.png");
+  }
+
+  public void writeOutputImage() {
+    for (int y = 0; y < this.imageSource.length; y++) {
+      for (int x = 0; x < this.imageSource[0].length; x++) {
+        int color = this.imageSource[y][x];
+        this.bufferedImage.setRGB(x, y, color);
+      }
+    }
+    this.writeImage("output.png");
+  }
+
   public void writeSeamImage(List<Seam> seams) {
     int height = this.imageSource.length;
     int width = this.imageSource[0].length;
@@ -71,8 +88,8 @@ public class ImageWriter {
       int color = seam.getColor();
       int x = seam.getStartPoint();
       for (int y = 0; y < path.length; y++) {
-        x += path[y];
         this.bufferedImage.setRGB(x, y, color);
+        x += path[y];
       }
     }
     this.writeImage("seams.png");

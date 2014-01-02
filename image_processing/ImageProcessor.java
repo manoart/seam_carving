@@ -8,7 +8,10 @@ public class ImageProcessor {
   /** The given image. */
   private BufferedImage image;
 
-  /** 2D array with RGB values of the given image. */
+  /** 2D array with int RGB values of the given image. */
+  private int[][] imageSource;
+
+  /** 3D array with separate RGB values of the given image. */
   private int[][][] imageRGBValues;
 
   /**
@@ -25,6 +28,7 @@ public class ImageProcessor {
    */
   public ImageProcessor(BufferedImage image) {
     this.setImage(image);
+    this.imageSource = new int[this.image.getHeight()][this.image.getWidth()];
     this.imageRGBValues = new int[this.image.getHeight()][this.image.getWidth()][3];
   }
 
@@ -43,7 +47,7 @@ public class ImageProcessor {
    * @return 3D array with RGB and Alpha values for every pixel of the image.
    */
   public int[][][] getImageValues() {
-    return this.getImageArray();
+    return this.getImageRGBValues();
   }
 
   /**
@@ -55,7 +59,7 @@ public class ImageProcessor {
    *
    * @return An 3 dimensional int array with RGB values for every pixel of the image.
    */
-  public int[][][] getImageArray() {
+  public int[][][] getImageRGBValues() {
     for (int y = 0; y < this.imageRGBValues.length; y++) {
       for (int x = 0; x < this.imageRGBValues[0].length; x++) {
         int rgb = this.image.getRGB(x, y);
@@ -65,6 +69,15 @@ public class ImageProcessor {
       }
     }
     return this.imageRGBValues;
+  }
+
+  public int[][] getImageSource() {
+    for (int y = 0; y < this.imageSource.length; y++) {
+      for (int x = 0; x < this.imageSource[0].length; x++) {
+        this.imageSource[y][x] = this.image.getRGB(x, y);
+      }
+    }
+    return this.imageSource;
   }
 
 
@@ -77,7 +90,7 @@ public class ImageProcessor {
    *
    * @return An 3 dimensional int array with RGB values for every pixel of the image.
    */
-  private int[][][] getRGBValues() {
+  private int[][][] getRGBValuesSlower() {
 
     byte[] pixels = ((DataBufferByte) this.image.getRaster().getDataBuffer()).getData();
     int width = this.image.getWidth();

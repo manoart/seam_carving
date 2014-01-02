@@ -102,13 +102,7 @@ public class Energizer {
     // brightness array with a 1 pixel black border
     int[][] tmp = new int[height + 2][width + 2];
 
-//    // filling tmp
-//    for (int i = 1; i < tmp.length - 1; i++) {
-//      for (int j = 1; j < tmp[0].length - 1; j++) {
-//        tmp[i][j] = this.brightness[i - 1][j - 1];
-//      }
-//    }
-
+    // filling tmp
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
         tmp[i + 1][j + 1] = this.brightness[i][j];

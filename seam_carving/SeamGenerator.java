@@ -10,19 +10,29 @@ public class SeamGenerator {
 
   private int[][] energy;
 
+  private int[][] imageSource;
+
   private int[][][] cumulatedEnergy;
 
   private List<Seam> seams;
 
+  private int seamCount;
+
   public SeamGenerator() {
-    this(null, 0);
+    this(null, null, 0);
   }
 
-  public SeamGenerator(int[][] energy, int seamNumber) {
+  public SeamGenerator(int[][] imageSource, int[][] energy, int seamCount) {
+    this.imageSource = imageSource;
     this.energy = energy;
-    this.seams = new ArrayList<Seam>(seamNumber);
+    this.seamCount = seamCount;
+    this.seams = new ArrayList<Seam>(seamCount);
     this.cumulatedEnergy = new int[this.energy.length][this.energy[0].length][2];
     this.calculateCumulatedEnergy();
+  }
+
+  public int[][] getEnergy() {
+    return this.energy;
   }
 
   public int[][][] getCumulatedEnergy() {
@@ -39,45 +49,77 @@ public class SeamGenerator {
   }
 
   private void generateSeams() {
-    this.addSeams();
-  }
-
-  private void addSeams() {
-    List indices = new ArrayList(this.seams.size());
     //find the seam with the lowest energy (minimal value in the last row)
-    int lowestEnergy = Integer.MAX_VALUE;
-    int lowestEnergyIndex = 0;
-    for (int j = 0; j < this.energy[0].length; j++) {
-      if (this.cumulatedEnergy[this.energy.length - 1][j][0] < lowestEnergy) {
-        lowestEnergy = this.cumulatedEnergy[this.energy.length - 1][j][0];
-        lowestEnergyIndex = j;
+    for (int s = 0; s < this.seamCount; s++) {
+      int lowestEnergy = Integer.MAX_VALUE;
+      int lowestEnergyIndex = 0;
+      for (int j = 0; j < this.energy[0].length; j++) {
+        if (this.cumulatedEnergy[this.energy.length - 1][j][0] < lowestEnergy) {
+          lowestEnergy = this.cumulatedEnergy[this.energy.length - 1][j][0];
+          lowestEnergyIndex = j;
+        }
       }
-    }
 
-    Seam seam = this.generateSeam(lowestEnergyIndex);
-    if (!seams.contains(seam)) {
-      seams.add(seam);
+      Seam seam = this.generateSeam(lowestEnergyIndex);
+      //this.cumulatedEnergy[this.cumulatedEnergy.length - 1][lowestEnergyIndex][0] = Integer.MAX_VALUE;
+   //   if (!seams.contains(seam)) {
+        seams.add(seam);
+     // }
+      this.reduceEnergyArray();
+      this.cumulatedEnergy = new int[this.energy.length][this.energy[0].length][2];
+      this.calculateCumulatedEnergy();
     }
   }
 
   private Seam generateSeam(int lowestEnergyIndex) {
     Seam seam;
     int[] path = new int[this.cumulatedEnergy.length];
-    int color;
+    double colorNuance;
     int tmp = lowestEnergyIndex;
 
     // find the path
-    for (int i = this.cumulatedEnergy.length - 1; i > 0; i--) {
+    int i;
+    for (i = this.cumulatedEnergy.length - 1; i > 0; i--) {
       path[i - 1] = - this.cumulatedEnergy[i][tmp][1];
+      this.cumulatedEnergy[i][tmp][0] = Integer.MAX_VALUE;
+      tmp += this.cumulatedEnergy[i][tmp][1];
     }
+    this.cumulatedEnergy[i][tmp][0] = Integer.MAX_VALUE;
 
     // find the color
-    // TODO calculate it properly
-    color = 255; // just for testing
-    //color = this.cumulatedEnergy[this.cumulatedEnergy.length - 1][lowestEnergyIndex][0];
+    colorNuance = 255.0 / this.seamCount; // just for testing
 
-    seam = new Seam(tmp, path, color);
+    int startPoint;
+    if (this.seams.size() > 0 && this.seams.get(this.seams.size() - 1).getStartPoint() <= tmp) {
+      startPoint = tmp + this.seams.size();
+    } else {
+      startPoint = tmp;
+    }
+    // color = (int)(255.0 - (colorNuance * this.seams.size())
+    seam = new Seam(startPoint, path, 255);
     return seam;
+  }
+
+  private void reduceEnergyArray() {
+    int[][] imageNew = new int[this.imageSource.length][this.imageSource[0].length - 1];
+    int[][] energyNew = new int[this.energy.length][this.energy[0].length - 1];
+    int columnOffset = 0;
+    for (int i = 0; i < energyNew.length; i++) {
+      columnOffset = 0;
+      for (int j = 0; j < energyNew[0].length; j++) {
+        if(this.cumulatedEnergy[i][j][0] == Integer.MAX_VALUE) {
+          columnOffset = 1;
+        }
+        imageNew[i][j] = this.imageSource[i][j + columnOffset];
+        energyNew[i][j] = this.energy[i][j + columnOffset];
+      }
+    }
+    this.imageSource = imageNew;
+    this.energy = energyNew;
+  }
+
+  public int[][] getImageSource() {
+    return this.imageSource;
   }
 
   private void calculateCumulatedEnergy() {
